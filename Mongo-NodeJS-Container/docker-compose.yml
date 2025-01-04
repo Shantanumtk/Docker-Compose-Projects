@@ -1,0 +1,38 @@
+# Docker Compose File for NodeJS-MongoDB Project
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:3000"
+    depends_on:
+      - db
+    restart: always
+    environment:
+      - MONGO_HOST=${DB_HOST}
+      - MONGO_USER=${DB_USER}
+      - MONGO_DATABASE=${DB_NAME}
+    networks:
+      - mongo-node-app-network
+
+  db:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_HOST: ${DB_HOST}
+      MONGO_USER: ${DB_USER}
+      MONGO_DATABASE: ${DB_NAME}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - mongo-node-app-network
+
+networks:
+  mongo-node-app-network:
+
+volumes:
+  mongo-data:
+
